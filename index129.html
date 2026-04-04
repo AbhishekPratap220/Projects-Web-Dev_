@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub User Data</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: rgba(238, 76, 76, 0.651); color: white; }
+        #Output { 
+            margin-top: 10px; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            color: white; 
+            display: none; 
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        const requestUrl = "https://api.github.com/users/hiteshchoudhary";
+        const xhr = new XMLHttpRequest();
+        let githubData = null;
+
+        xhr.open('GET', requestUrl);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                githubData = JSON.parse(this.responseText);
+            }
+        };
+        xhr.send();
+
+        // Create button
+        const button = document.createElement('button');
+        button.id = "ShowData";
+        button.innerHTML = "Show Data";
+        document.body.appendChild(button);  // Append button to the body
+
+        // Create output div
+        const div = document.createElement('div');
+        div.id = "Output";
+        document.body.appendChild(div);  // Append div to the body
+
+        // Function to toggle display
+        function toggleDisplay() {
+            const outputDiv = document.getElementById('Output');
+
+            if (!githubData) {
+                alert("Data is not loaded yet. Please wait...");
+                return;
+            }
+
+            if (outputDiv.style.display === "none" || outputDiv.innerHTML === "") {
+                outputDiv.innerHTML = `<strong>GitHub Followers:</strong> ${githubData.followers} <br>
+                                       <img src="${githubData.avatar_url}" width="100">`;
+                outputDiv.style.display = "block";
+                button.innerHTML = "Hide Data";
+            } else {
+                outputDiv.style.display = "none";
+                button.innerHTML = "Show Data";
+                button.remove(button);
+            }
+        }
+
+        // Add event listener AFTER button is created
+        button.addEventListener("click", toggleDisplay);
+    </script>
+
+</body>
+</html>
+
